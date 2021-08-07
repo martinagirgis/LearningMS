@@ -30,9 +30,23 @@ Route::group(['prefix'=>'admin'],function(){
     Route::get('groups/details/exam/{id}','Admin\GroupsController@exams')->name('admin.view.exam');
 
 
+    Route::any('groups/images/add/{uid}','Admin\GroupsController@addImage')->name('groups.image.store');
+    Route::any('groups/images/remove','Admin\GroupsController@removeImage')->name('groups.image.remove');
+    Route::any('groups/images/test','Admin\GroupsController@test')->name('groups.test');
+
+    Route::any('groups/videos/add/{uid}','Admin\GroupsController@addVideo')->name('groups.video.store');
+    Route::any('groups/videos/remove','Admin\GroupsController@removeVideo')->name('groups.video.remove');
+    Route::any('groups/videos/test','Admin\GroupsController@testvid')->name('groups.testvid');
+
+    Route::any('groups/files/add/{uid}','Admin\GroupsController@addFile')->name('groups.file.store');
+    Route::any('groups/files/remove','Admin\GroupsController@removeFile')->name('groups.file.remove');
+    Route::any('groups/files/test','Admin\GroupsController@testfile')->name('groups.testfile');
+
+
     Route::get('/login', 'Auth\AdminLoginController@showLoginForm')->name('admin.login');
     Route::post('/login', 'Auth\AdminLoginController@login')->name('admin.login.submit');
     Route::get('/register', 'Auth\AdminRegisterController@showRegisterForm')->name('admin.register');
     Route::post('/register', 'Auth\AdminRegisterController@register')->name('admin.register.submit');
 
 });
+// Route::any('groups/test','Admin\GroupsController@addImage')->name('groups.image.store');

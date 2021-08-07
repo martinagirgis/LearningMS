@@ -10,9 +10,6 @@ class Media extends Model
     protected $fillable = [
         'type',
         'url',
-        'description',
-        'groups_teacher_id',
-        'group_id',
-        'is_publisher',
+        'group_uid',
     ];
 }

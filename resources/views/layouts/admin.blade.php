@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{asset("assets/admin/images/icon.png")}}">
+
+    <link href="{{asset('assets/admin/libs/dropzone/min/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
+
     <!-- Bootstrap Css -->
     <link href="{{asset("assets/admin/css/bootstrap.min.css")}}" id="bootstrap-style" rel="stylesheet" type="text/css"/>
     <!-- Icons Css -->
@@ -16,6 +19,7 @@
     <link href="{{asset("assets/admin/css/app-rtl.css")}}" rel="stylesheet" type="text/css"/>
     <link href="{{asset("assets/admin/css/redo.css")}}" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="{{asset('assets/site/css/teacher.css')}}">
+
 
 </head>
 
@@ -130,6 +134,39 @@
 
 @yield("script")
 <script src="{{asset("assets/admin/js/app.js")}}"></script>
-
+{{-- <script>
+    Dropzone.options.fileDropzone = {
+      url: 'http://127.0.0.1:8000/admin/groups/images/add/' + 'uuid',
+      acceptedFiles: ".jpeg,.jpg,.png,.gif",
+      addRemoveLinks: true,
+      maxFilesize: 8,
+      headers: {
+      'X-CSRF-TOKEN': "{{ csrf_token() }}"
+      },
+    //   data: { "_token": "{{ csrf_token() }}", name: 'vvv'},
+      removedfile: function(file)
+      {
+        var name = file.upload.uuid;
+        $.ajax({
+          type: 'POST',
+          url: '{{route("groups.image.remove")}}',
+          data: { "_token": "{{ csrf_token() }}", name: name},
+          success: function (data){
+              console.log(data);
+          },
+          error: function(e) {
+              console.log(e);
+          }});
+          var fileRef;
+          return (fileRef = file.previewElement) != null ?
+          fileRef.parentNode.removeChild(file.previewElement) : void 0;
+      },
+      success: function (file, response, data) {
+        console.log(file);
+        console.log(response);
+        console.log(data);
+      },
+    }
+</script> --}}
 </body>
 </html>

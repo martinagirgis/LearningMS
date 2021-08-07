@@ -1,9 +1,18 @@
 @extends("layouts.admin")
 @section("pageTitle", "Ejada")
 @section("style")
+
     <link href="{{asset("assets/admin/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css")}}" rel="stylesheet" type="text/css"/>
     <link href="{{asset("assets/admin/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css")}}" rel="stylesheet" type="text/css"/>
     <link href="{{asset("assets/admin/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css")}}" rel="stylesheet" type="text/css"/>
+
+    <script src="https://www.webrtc-experiment.com/RecordRTC.js"></script>
+    <script src="https://www.webrtc-experiment.com/gif-recorder.js"></script>
+    <script src="https://www.webrtc-experiment.com/getScreenId.js"></script>
+    <script src="https://www.webrtc-experiment.com/DetectRTC.js"> </script>
+
+    <!-- for Edige/FF/Chrome/Opera/etc. getUserMedia support -->
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 @endsection
 @section("content")
     <div class="row">
@@ -34,7 +43,8 @@
                                 <li><a class="ml-3 h5" data-toggle="tab" href="#rank">التصنيف</a></li>
                                 <li><a class="ml-3 h5" data-toggle="tab" href="#images">الصور</a></li>
                                 <li><a class="ml-3 h5" data-toggle="tab" href="#videos">الفيديوهات</a></li>
-                                <li><a class="ml-3 h5" data-toggle="tab" href="#menu3">الملفات</a></li>
+                                <li><a class="ml-3 h5" data-toggle="tab" href="#files">الملفات</a></li>
+                                <li><a class="ml-3 h5" data-toggle="tab" href="#record">تسجيل صوتي</a></li>
 
                             </ul>
 
@@ -48,8 +58,10 @@
                                 @include('admin.groups.details.includes.rank')
                                 @include('admin.groups.details.includes.images')
                                 @include('admin.groups.details.includes.videos')
+                                @include('admin.groups.details.includes.files')
+                                @include('admin.groups.details.includes.record')
 
-                                <div id="menu1" class="tab-pane fade">
+                                {{-- <div id="menu1" class="tab-pane fade">
                                     <h3>Menu 1</h3>
                                     <div class="row">
                                         <div class="col-sm-4">
@@ -225,7 +237,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
 
@@ -235,7 +247,154 @@
     </div>
 @endsection
 @section("script")
+<script src="{{asset("assets/admin/libs/dropzone/min/dropzone.min.js")}}"></script>
+<script>
+    var x = document.getElementById("uidd").value;
+    var y = document.getElementById("uidvid").value;
+    var z = document.getElementById("uidfile").value;
 
+    console.log(x);
+    var myDropzoneTheFirst = new Dropzone(
+        // myDropzoneTheFirst.prototype.defaultOptions.dictDefaultMessage = "أضف الصور";
+
+        //id of drop zone element 1
+        '#file-dropzone', { 
+            url: 'http://127.0.0.1:8000/admin/groups/images/add/' + x,
+            acceptedFiles: ".jpeg,.jpg,.png,.gif",
+            addRemoveLinks: true,
+            maxFilesize: 10,
+            headers: {
+            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            removedfile: function(file)
+            {
+                var name = file.upload.filename;
+                $.ajax({
+                type: 'POST',
+                url: '{{route("groups.image.remove")}}',
+                data: { "_token": "{{ csrf_token() }}", name: name, x:x},
+                success: function (data){
+                    console.log(data);
+                },
+                error: function(e) {
+                    console.log(e);
+                }});
+                var fileRef;
+                return (fileRef = file.previewElement) != null ?
+                fileRef.parentNode.removeChild(file.previewElement) : void 0;
+            },
+            success: function (file, response, data) {
+                console.log(file);
+                console.log(response);
+                console.log(data);
+            },
+            }
+        );
+
+var myDropzoneTheSecond = new Dropzone(
+        //id of drop zone element 2
+        '#file-dropzone8', { 
+            url: 'http://127.0.0.1:8000/admin/groups/videos/add/' + y,
+            acceptedFiles: ".mp4,.MOV,.WMV",
+            addRemoveLinks: true,
+            maxFilesize: 1000,
+            headers: {
+            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            removedfile: function(file)
+            {
+                var name = file.upload.filename;
+                $.ajax({
+                type: 'POST',
+                url: '{{route("groups.video.remove")}}',
+                data: { "_token": "{{ csrf_token() }}", name: name, y:y},
+                success: function (data){
+                    console.log(data);
+                },
+                error: function(e) {
+                    console.log(e);
+                }});
+                var fileRef;
+                return (fileRef = file.previewElement) != null ?
+                fileRef.parentNode.removeChild(file.previewElement) : void 0;
+            },
+            success: function (file, response, data) {
+                console.log(file);
+                console.log(response);
+                console.log(data);
+            },
+            // }
+        }
+    );
+
+    var myDropzoneThefile = new Dropzone(
+        //id of drop zone element 2
+        '#file-dropzonefile', { 
+            url: 'http://127.0.0.1:8000/admin/groups/files/add/' + z,
+            acceptedFiles: ".pdf",
+            addRemoveLinks: true,
+            maxFilesize: 1000,
+            headers: {
+            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            removedfile: function(file)
+            {
+                var name = file.upload.filename;
+                $.ajax({
+                type: 'POST',
+                url: '{{route("groups.file.remove")}}',
+                data: { "_token": "{{ csrf_token() }}", name: name, z:z},
+                success: function (data){
+                    console.log(data);
+                },
+                error: function(e) {
+                    console.log(e);
+                }});
+                var fileRef;
+                return (fileRef = file.previewElement) != null ?
+                fileRef.parentNode.removeChild(file.previewElement) : void 0;
+            },
+            success: function (file, response, data) {
+                console.log(file);
+                console.log(response);
+                console.log(data);
+            },
+            // }
+        }
+    );
+    Dropzone.prototype.defaultOptions.dictDefaultMessage = "أضف الصور";
+    // Dropzone.options.fileDropzone = {
+    //   url: 'http://127.0.0.1:8000/admin/groups/images/add/' + x,
+    //   acceptedFiles: ".jpeg,.jpg,.png,.gif",
+    //   addRemoveLinks: true,
+    //   maxFilesize: 10,
+    //   headers: {
+    //   'X-CSRF-TOKEN': "{{ csrf_token() }}"
+    //   },
+    //   removedfile: function(file)
+    //   {
+    //     var name = file.upload.filename;
+    //     $.ajax({
+    //       type: 'POST',
+    //       url: '{{route("groups.image.remove")}}',
+    //       data: { "_token": "{{ csrf_token() }}", name: name, x:x},
+    //       success: function (data){
+    //           console.log(data);
+    //       },
+    //       error: function(e) {
+    //           console.log(e);
+    //       }});
+    //       var fileRef;
+    //       return (fileRef = file.previewElement) != null ?
+    //       fileRef.parentNode.removeChild(file.previewElement) : void 0;
+    //   },
+    //   success: function (file, response, data) {
+    //     console.log(file);
+    //     console.log(response);
+    //     console.log(data);
+    //   },
+    // }
+</script>
     <script src="{{asset("assets/admin/libs/datatables.net/js/jquery.dataTables.min.js")}}"></script>
     <script src="{{asset("assets/admin/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js")}}"></script>
     <script src="{{asset("assets/admin/libs/datatables.net-buttons/js/dataTables.buttons.min.js")}}"></script>
