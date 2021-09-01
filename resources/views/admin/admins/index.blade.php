@@ -24,7 +24,7 @@
                     <strong>{{ $message }}</strong>
                 </div>
                 @endif
-                <h5 class="">المقالات</h5>
+                <h5 class="">المسؤلين</h5>
 
                 <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
 
@@ -46,10 +46,9 @@
                         <tr>
                             <th>{{$admin->name}}</th>
                             <th>{{$admin->email}}</th>
-                            <th>{{$admin->password}}</th>
+                            <th>{{$admin->real_password}}</th>
                             <th>{{$admin->phone}}</th>
                             <th>{{$admin->gender}}</th>
-                            <th>{{$admin->image}}</th>
                         <th>
                             <a class="btn btn-dark col-sm-12" data-toggle="modal" data-target="#course{{$admin->id}}">عرض</a><br>
                         </th>
@@ -62,9 +61,9 @@
                                             التحكم
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                            <a class="btn btn-dark col-sm-12" href="{{route('blogs.show',['blog'=>$admin->id])}}">عرض</a><br>
-                                            <a class="btn btn-dark col-sm-12"  href="{{route('blogs.edit',['blog'=>$admin->id])}}">تعديل</a>
-                                            <form method="post" action="{{route('blogs.destroy',['blog'=>$admin->id])}}">
+                                            <a class="btn btn-dark col-sm-12" href="{{route('admins.show',['admin'=>$admin->id])}}">عرض</a><br>
+                                            <a class="btn btn-dark col-sm-12"  href="{{route('admins.edit',['admin'=>$admin->id])}}">تعديل</a>
+                                            <form method="post" action="{{route('admins.destroy',['admin'=>$admin->id])}}">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-dark col-sm-12" >حذف</button>
@@ -88,14 +87,13 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
         <div class="modal-header backgroundColor text-white" style="border:none">
-            <h5 class="modal-title" style="color: black" id="courseLabel{{$blogg->id}}">الموضوع</h5>
+            <h5 class="modal-title" style="color: black" id="courseLabel{{$blogg->id}}">الصوره</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="modal-body backgroundColorSec p-5">
-            <?php $x = html_entity_decode($blogg->description_ar); echo $x ?>
-
+            <img  src="{{asset('assets/images/admins')}}/{{$blogg->image}}" alt="" class="group-img img-fluid " ><br>
         </div>
 
         </div>

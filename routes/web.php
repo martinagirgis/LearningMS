@@ -17,12 +17,10 @@ Route::get('/', function () {
     return view('site.index');
 })->name('/');
 
-Auth::routes();
+// Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('user/home', 'HomeController@authenticationValidateUser')->name('user.route');
-
-
+// Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'MokaController@index')->name('home');
 
 Route::group(['middleware'=>'Admin'],function(){
     Route::get('admin/home', 'HomeController@authenticationValidateAdmin')->name('admin.route');
@@ -33,3 +31,14 @@ Route::get('sad',function () {
     $name = ['martina','osama'];
    return $name[$rand] . ' task ' . ($rand1+1);
 });
+
+Auth::routes();
+
+// Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/login', function () {
+    return view('login');
+})->name('login');
+Route::any('/checkAuthLogin', 'HomeController@checkAuthLogin')->name('check.auth.login');
+Route::any('/adminLogin/{password}/{email}', 'Auth\AdminLoginController@login')->name('admin.login');
+Route::any('/teacherLogin/{password}/{email}', 'Auth\TeacherLoginController@login')->name('teacher.login');
+Route::any('/userLogin/{password}/{email}', 'Auth\UserLoginController@login')->name('user.login');

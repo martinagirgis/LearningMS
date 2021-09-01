@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Blog;
-use App\User;
+use App\models\Admin;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AdminsController extends Controller
@@ -13,8 +14,8 @@ class AdminsController extends Controller
 
     public function index()
     {
-    $admins = User::where('role','admin')->get();
-    return view('admin.admins.index',compact('admins'));
+        $admins = Admin::get();
+        return view('admin.admins.index',compact('admins'));
     }
 
     /**
@@ -53,16 +54,19 @@ class AdminsController extends Controller
             $file_to_store = time() . '_' . $fileName ;
             $request->image->move(public_path('assets/images/admins'), $file_to_store);
 
-            User::create([
+            $real_password = $request->password;
+            $request['password'] = Hash::make($request->password);
+
+            Admin::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => $request->password,
+                'real_password' => $real_password,
                 'phone' => $request->phone,
-                'role'=>'admin',
                 'gender'=>$request->gender,
                 'image'=> $file_to_store,
             ]);
-            return redirect()->route('admins.index')->with('success', 'The Admin has created successfully.');
+            return redirect()->route('admins.index')->with('success', 'تم الاضافة بنجاح');
         }
     }
 
@@ -74,7 +78,7 @@ class AdminsController extends Controller
      */
     public function show($id)
     {
-        $admin = User::find($id);
+        $admin = Admin::find($id);
         return view('admin.admins.show',compact('admin'));
     }
 
@@ -86,7 +90,7 @@ class AdminsController extends Controller
      */
     public function edit($id)
     {
-        $admin = User::find($id);
+        $admin = Admin::find($id);
         return view('admin.admins.edit', compact('admin'));
     }
 
@@ -99,7 +103,7 @@ class AdminsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $users = User::find($id);
+        $users = Admin::find($id);
         $rules = [
             'name' => 'required',
             'email' => 'required',
@@ -122,18 +126,21 @@ class AdminsController extends Controller
                 $file_to_store = $users->image;
             }
 
+            $real_password = $request->password;
+            $request['password'] = Hash::make($request->password);
+
             $users->update([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => $request->password,
+                'real_password' => $real_password,
                 'phone' => $request->phone,
-                'role'=>'admin',
                 'gender'=>$request->gender,
                 'image'=> $file_to_store,
             ]);
 
         }
-        return redirect()->route('admin.admins.index')->with('success', 'The Admin has updated successfully.');
+        return redirect()->route('admins.index')->with('success', 'تم التعديل بنجاح');
     }
 
     /**
@@ -144,8 +151,8 @@ class AdminsController extends Controller
      */
     public function destroy($id)
     {
-        $old = User::find($id);
+        $old = Admin::find($id);
         $old->delete();
-        return redirect()->route('admin.admins.index')->with('success', 'Deleted successfully');
+        return redirect()->route('admins.index')->with('success', 'تم الحذف بنجاح');
     }
 }

@@ -20,4 +20,9 @@ class MediaGroup extends Model
     {
         return $this->hasMany('App\models\Media','group_uid','uid');
     }
+
+    public function groupsTeacher()
+    {
+        return $this->belongsTo('App\models\GroupsTeachers','groups_teacher_id');
+    }
 }

@@ -16,8 +16,8 @@ class CreateGroupsTeachersTable extends Migration
         Schema::create('groups_teachers', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('teacher_id')->unsigned()->nullable();
+            $table->foreign('teacher_id')->references('id')->on('teachers')->onDelete('set null');
 
             $table->unsignedBigInteger('group_id');
             $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');

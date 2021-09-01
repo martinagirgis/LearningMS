@@ -14,6 +14,11 @@
                         </div>
                     @endif
 
+                    @if(Auth::guard('web')->user())
+                    user
+                    @elseif(Auth::guard('teacher')->user())
+                    teacher
+                    @endif
                     {{ __('You are logged in!') }}
                 </div>
             </div>

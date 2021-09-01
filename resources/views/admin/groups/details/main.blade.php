@@ -34,7 +34,7 @@
                         <div class="container">
                             <h2>تفاصيل المجموعة</h2>
                             <ul class="nav nav-tabs">
-                                <li class="active ml-3 h5"><a data-toggle="tab" href="#home">الرئيسية</a></li>
+                                <li class="active ml-3 h5 active"><a data-toggle="tab" href="#home">الرئيسية</a></li>
                                 <li><a class="ml-3 h5" data-toggle="tab" href="#teachers">هيئة التدريس</a></li>
                                 <li><a class="ml-3 h5" data-toggle="tab" href="#students">الطلاب</a></li>
                                 <li><a class="ml-3 h5" data-toggle="tab" href="#exams">الاختبارات</a></li>
@@ -248,10 +248,15 @@
 @endsection
 @section("script")
 <script src="{{asset("assets/admin/libs/dropzone/min/dropzone.min.js")}}"></script>
+<script src="{{asset("assets/admin/libs/metismenu/metisMenu.min.js")}}"></script>
+<script src="{{asset("assets/admin/libs/simplebar/simplebar.min.js")}}"></script>
+<script src="{{asset("assets/admin/libs/node-waves/waves.min.js")}}"></script>
+
 <script>
     var x = document.getElementById("uidd").value;
     var y = document.getElementById("uidvid").value;
     var z = document.getElementById("uidfile").value;
+    var t = document.getElementById("uidaudio").value;
 
     console.log(x);
     var myDropzoneTheFirst = new Dropzone(
@@ -344,6 +349,42 @@ var myDropzoneTheSecond = new Dropzone(
                 type: 'POST',
                 url: '{{route("groups.file.remove")}}',
                 data: { "_token": "{{ csrf_token() }}", name: name, z:z},
+                success: function (data){
+                    console.log(data);
+                },
+                error: function(e) {
+                    console.log(e);
+                }});
+                var fileRef;
+                return (fileRef = file.previewElement) != null ?
+                fileRef.parentNode.removeChild(file.previewElement) : void 0;
+            },
+            success: function (file, response, data) {
+                console.log(file);
+                console.log(response);
+                console.log(data);
+            },
+            // }
+        }
+    );
+
+    var myDropzoneTheAudio = new Dropzone(
+        //id of drop zone element 2
+        '#file-dropzoneaudio', { 
+            url: 'http://127.0.0.1:8000/admin/groups/audios/add/' + t,
+            acceptedFiles: ".wav,.mp3,.AIFF,.AAC,.WMA",
+            addRemoveLinks: true,
+            maxFilesize: 1000,
+            headers: {
+            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            removedfile: function(file)
+            {
+                var name = file.upload.filename;
+                $.ajax({
+                type: 'POST',
+                url: '{{route("groups.file.remove")}}',
+                data: { "_token": "{{ csrf_token() }}", name: name, t:t},
                 success: function (data){
                     console.log(data);
                 },

@@ -13,7 +13,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('auth');
+        // $this->middleware('auth');
     }
 
     /**
@@ -21,20 +21,21 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function checkAuthLogin(Request $request)
     {
-        return view('home');
+        if($request->type == 'admin')
+        {
+            return redirect()->route('admin.login',['password'=> $request->password, 'email'=>$request->email]);
+        }
+        elseif($request->type == 'teacher')
+        {
+            return redirect()->route('teacher.login',['password'=> $request->password, 'email'=>$request->email]);
+        }
+        elseif($request->type == 'user')
+        {
+            return redirect()->route('user.login',['password'=> $request->password, 'email'=>$request->email]);
+        }
+        return 'sad';
     }
 
-    public function authenticationValidateAdmin(){
-
-        return view('authenticationValidateAdmin');
-
-    }
-
-    public function authenticationValidateUser(){
-
-        return view('authenticationValidateUser');
-
-    }
 }

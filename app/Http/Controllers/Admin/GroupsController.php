@@ -29,9 +29,11 @@ class GroupsController extends Controller
         $group = Groups::find($id);
         return view('admin.groups.details.main', compact('group'));
     }
+
     public function exams($id){
         return view('admin.groups.details.exam');
     }
+    
     /**
      * Show the form for creating a new resource.
      *
@@ -190,7 +192,7 @@ class GroupsController extends Controller
     {
         $group = MediaGroup::where('uid',$request->uid)->first();
         $group->update([
-                'uid'=> $request->uid,
+                'uid'=>$request->uid,
                 'description'=> $request->description,
                 'groups_teacher_id'=>1,
                 'group_id'=>1,
@@ -302,5 +304,56 @@ class GroupsController extends Controller
                 'is_publisher'=>1,
             ]);
         return redirect()->back()->with('success', 'The Group has added files successfully.');
+    }
+
+    public function removeAudio(Request $request)
+    {
+        $name =  $request->get('name');
+        $z =  $request->get('z');
+        $url = $z . $name ;
+        Media::where(['url' => $url])->delete();
+
+        return $url;
+    }
+
+    public function addAudio(Request $request, $uid)
+    {
+        $group = MediaGroup::where('uid',$uid)->count();
+
+        if($group==0)
+        {
+            MediaGroup::create([
+                'uid'=> $uid,
+                'description'=> ' ',
+                'groups_teacher_id'=>1,
+                'group_id'=>1,
+                'is_publisher'=>1,
+            ]);
+        }
+        $fileName = $request->file('file')->getClientOriginalName();
+        $file_to_store = $uid . $fileName ;
+        $request->file('file')->move(public_path('assets/audio/Media'), $file_to_store);
+
+        Media::create([
+            'type'=>'audio',
+            'url'=>$file_to_store,
+            'group_uid'=> $uid,
+        ]);
+
+      return response()->json([ 'success' => $request->file('file')->getClientOriginalName()]);
+    
+    }
+
+    public function testAudio(Request $request)
+    {
+        $group = MediaGroup::where('uid',$request->uidaudio)->first();
+        $group->update([
+                'uid'=> $request->uidaudio,
+                'description'=> $request->description,
+                'groups_teacher_id'=>1,
+                'group_id'=>1,
+                'is_publisher'=>1,
+            ]);
+        return redirect()->back()->with('success', 'تمت اضافة المنشور ملفات صوتية بنجاح');
     }
 }
