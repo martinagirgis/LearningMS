@@ -29,7 +29,7 @@ class TeacherLoginController extends Controller
         // Attempt to log the user in
         if(Auth::guard('teacher')->attempt(['email' => $email, 'password' => $password]))
         {
-            return redirect()->intended(route('home'));
+            return redirect()->intended(route('teacher.dashboard'));
             // return 'user login';
         }
 

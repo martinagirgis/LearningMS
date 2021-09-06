@@ -56,7 +56,7 @@
                                                     التحكم
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                                    <a class="btn btn-dark col-sm-12" href="{{route('groups.show',['group'=>$admin->id])}}">عرض</a><br>
+                                                    <a class="btn btn-dark col-sm-12" href="{{route('groups.details',['id'=>$admin->id])}}">عرض</a><br>
                                                     <a class="btn btn-dark col-sm-12"  href="{{route('groups.edit',['group'=>$admin->id])}}">تعديل</a>
                                                     <form method="post" action="{{route('groups.destroy',['group'=>$admin->id])}}">
                                                         @csrf

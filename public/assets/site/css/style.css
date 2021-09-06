@@ -9,11 +9,13 @@
 # General
 --------------------------------------------------------------*/
 section{
-    height:100%
+  height:100%
 }
 body {
   font-family: "Open Sans", sans-serif;
   color: #272829;
+  direction:rtl;
+  text-align: right
 }
 
 a {
@@ -50,7 +52,7 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 24px;
   position: absolute;
   top: 7px;
-  left: 8px;
+  right: 8px;
 }
 
 .back-to-top:hover {
@@ -65,7 +67,7 @@ h1, h2, h3, h4, h5, h6 {
 #header {
   position: fixed;
   top: 0;
-  left: 0;
+  right: 0;
   bottom: 0;
   width: 300px;
   transition: all ease-in-out 0.5s;
@@ -120,15 +122,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #main {
-  margin-left: 300px;
+  margin-right: 300px;
 }
 
 @media (max-width: 1199px) {
   #header {
-    left: -300px;
+      right: -300px;
   }
   #main {
-    margin-left: 0;
+      margin-right: 0;
   }
 }
 
@@ -201,7 +203,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .mobile-nav-active #header {
-  left: 0;
+  right: 0;
 }
 
 .mobile-nav-active .mobile-nav-toggle i {
@@ -259,19 +261,19 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (min-width: 1024px) {
   #hero {
-    background-attachment: fixed;
+      background-attachment: fixed;
   }
 }
 
 @media (max-width: 768px) {
   #hero h1 {
-    font-size: 28px;
-    line-height: 36px;
+      font-size: 28px;
+      line-height: 36px;
   }
   #hero h2 {
-    font-size: 18px;
-    line-height: 24px;
-    margin-bottom: 30px;
+      font-size: 18px;
+      line-height: 24px;
+      margin-bottom: 30px;
   }
 }
 
@@ -308,7 +310,7 @@ section {
   height: 3px;
   background: #149ddd;
   bottom: 0;
-  left: 0;
+  right: 0;
 }
 
 .section-title p {
@@ -597,7 +599,7 @@ section {
 }
 
 .services .icon {
-  float: left;
+  float: right;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -678,7 +680,7 @@ section {
 
 .testimonials .testimonial-item .quote-icon-left {
   display: inline-block;
-  left: -5px;
+  right: -5px;
   position: relative;
 }
 
@@ -709,7 +711,7 @@ section {
   border-left: 20px solid transparent;
   position: absolute;
   bottom: -20px;
-  left: calc(50% - 20px);
+  right: calc(50% - 20px);
 }
 
 .testimonials .owl-nav, .testimonials .owl-dots {
@@ -732,7 +734,7 @@ section {
 
 @media (max-width: 767px) {
   .testimonials {
-    margin: 30px 10px;
+      margin: 30px 10px;
   }
 }
 
@@ -902,19 +904,19 @@ section {
 
 @-webkit-keyframes animate-loading {
   0% {
-    transform: rotate(0deg);
+      transform: rotate(0deg);
   }
   100% {
-    transform: rotate(360deg);
+      transform: rotate(360deg);
   }
 }
 
 @keyframes animate-loading {
   0% {
-    transform: rotate(0deg);
+      transform: rotate(0deg);
   }
   100% {
-    transform: rotate(360deg);
+      transform: rotate(360deg);
   }
 }
 
@@ -946,20 +948,20 @@ section {
 
 .breadcrumbs ol li + li::before {
   display: inline-block;
-  padding-right: 10px;
+  padding-left: 10px;
   color: #0e2442;
   content: "/";
 }
 
 @media (max-width: 768px) {
   .breadcrumbs .d-flex {
-    display: block !important;
+      display: block !important;
   }
   .breadcrumbs ol {
-    display: block;
+      display: block;
   }
   .breadcrumbs ol li {
-    display: inline-block;
+      display: inline-block;
   }
 }
 
@@ -1042,11 +1044,11 @@ section {
 
 @media (max-width: 768px) {
   .portfolio-details .portfolio-description h2 {
-    width: 100%;
+      width: 100%;
   }
   .portfolio-details .portfolio-info {
-    position: static;
-    margin-top: 30px;
+      position: static;
+      margin-top: 30px;
   }
 }
 
@@ -1058,7 +1060,7 @@ section {
   color: #f4f6fd;
   font-size: 14px;
   position: fixed;
-  left: 0;
+  right: 0;
   bottom: 0;
   width: 300px;
   z-index: 9999;
@@ -1078,8 +1080,8 @@ section {
 
 @media (max-width: 1199px) {
   #footer {
-    position: static;
-    width: auto;
-    padding-right: 20px 15px;
+      position: static;
+      width: auto;
+      padding-right: 20px 15px;
   }
 }

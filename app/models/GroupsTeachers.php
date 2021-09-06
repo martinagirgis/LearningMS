@@ -10,12 +10,18 @@ class GroupsTeachers extends Model
     protected $fillable = [
         'teacher_id',
         'group_id',
+        'type',
         'is_publisher',
     ];
 
     public function teacher()
     {
         return $this->belongsTo('App\models\Teacher','teacher_id');
+    }
+
+    public function admin()
+    {
+        return $this->belongsTo('App\models\Admin','teacher_id');
     }
 
     public function group()

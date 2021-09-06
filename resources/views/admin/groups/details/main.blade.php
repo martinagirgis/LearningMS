@@ -1,7 +1,7 @@
 @extends("layouts.admin")
 @section("pageTitle", "Ejada")
 @section("style")
-
+<link href="{{asset("assets/admin/libs/select2/css/select2.min.css")}}" rel="stylesheet" type="text/css"/>
     <link href="{{asset("assets/admin/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css")}}" rel="stylesheet" type="text/css"/>
     <link href="{{asset("assets/admin/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css")}}" rel="stylesheet" type="text/css"/>
     <link href="{{asset("assets/admin/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css")}}" rel="stylesheet" type="text/css"/>
@@ -257,6 +257,8 @@
     var y = document.getElementById("uidvid").value;
     var z = document.getElementById("uidfile").value;
     var t = document.getElementById("uidaudio").value;
+    var groupId = {{$group->id}};
+
 
     console.log(x);
     var myDropzoneTheFirst = new Dropzone(
@@ -264,7 +266,7 @@
 
         //id of drop zone element 1
         '#file-dropzone', { 
-            url: 'http://127.0.0.1:8000/admin/groups/images/add/' + x,
+            url: 'http://127.0.0.1:8000/admin/groups/images/add/' + x + '/' + groupId,
             acceptedFiles: ".jpeg,.jpg,.png,.gif",
             addRemoveLinks: true,
             maxFilesize: 10,
@@ -299,7 +301,7 @@
 var myDropzoneTheSecond = new Dropzone(
         //id of drop zone element 2
         '#file-dropzone8', { 
-            url: 'http://127.0.0.1:8000/admin/groups/videos/add/' + y,
+            url: 'http://127.0.0.1:8000/admin/groups/videos/add/' + y + '/' + groupId,
             acceptedFiles: ".mp4,.MOV,.WMV",
             addRemoveLinks: true,
             maxFilesize: 1000,
@@ -335,7 +337,7 @@ var myDropzoneTheSecond = new Dropzone(
     var myDropzoneThefile = new Dropzone(
         //id of drop zone element 2
         '#file-dropzonefile', { 
-            url: 'http://127.0.0.1:8000/admin/groups/files/add/' + z,
+            url: 'http://127.0.0.1:8000/admin/groups/files/add/' + z + '/' + groupId,
             acceptedFiles: ".pdf",
             addRemoveLinks: true,
             maxFilesize: 1000,
@@ -371,7 +373,7 @@ var myDropzoneTheSecond = new Dropzone(
     var myDropzoneTheAudio = new Dropzone(
         //id of drop zone element 2
         '#file-dropzoneaudio', { 
-            url: 'http://127.0.0.1:8000/admin/groups/audios/add/' + t,
+            url: 'http://127.0.0.1:8000/admin/groups/audios/add/' + t + '/' + groupId,
             acceptedFiles: ".wav,.mp3,.AIFF,.AAC,.WMA",
             addRemoveLinks: true,
             maxFilesize: 1000,
@@ -405,7 +407,7 @@ var myDropzoneTheSecond = new Dropzone(
     );
     Dropzone.prototype.defaultOptions.dictDefaultMessage = "أضف الصور";
     // Dropzone.options.fileDropzone = {
-    //   url: 'http://127.0.0.1:8000/admin/groups/images/add/' + x,
+    //   url: 'http://127.0.0.1:8000/admin/groups/images/add/' + x + y,
     //   acceptedFiles: ".jpeg,.jpg,.png,.gif",
     //   addRemoveLinks: true,
     //   maxFilesize: 10,
@@ -449,4 +451,5 @@ var myDropzoneTheSecond = new Dropzone(
     <script src="{{asset("assets/admin/libs/datatables.net-responsive/js/dataTables.responsive.min.js")}}"></script>
     <script src="{{asset("assets/admin/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js")}}"></script>
     <script src="{{asset("assets/admin/js/pages/datatables.init.js")}}"></script>
+    <script src="{{asset("assets/admin/libs/select2/js/select2.min.js")}}"></script>
 @endsection

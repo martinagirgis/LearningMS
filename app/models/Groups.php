@@ -16,4 +16,9 @@ class Groups extends Model
     {
         return $this->hasMany('App\models\MediaGroup','group_id');
     }
+
+    public function userGroup()
+    {
+        return $this->hasMany('App\models\GroupsUsers','group_id');
+    }
 }

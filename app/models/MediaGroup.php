@@ -12,6 +12,7 @@ class MediaGroup extends Model
         'uid',
         'description',
         'groups_teacher_id',
+        'publisher_type',
         'group_id',
         'is_publisher',
     ];
@@ -24,5 +25,10 @@ class MediaGroup extends Model
     public function groupsTeacher()
     {
         return $this->belongsTo('App\models\GroupsTeachers','groups_teacher_id');
+    }
+//////////////////
+    public function groupsAdmin()
+    {
+        return $this->belongsTo('App\models\Admins','groups_teacher_id');
     }
 }

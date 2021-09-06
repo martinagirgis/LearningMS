@@ -1,3 +1,4 @@
+
 <div id="home" class="tab-pane active">
     <br>
 <h4 class="text-center h3">
@@ -6,15 +7,83 @@
 {{-- </div> --}}
 @foreach($group->mediaGroup as $post)
     <div class="card mt-4">
-        <div class="card-body">
-    
-            <div class="media mb-5">
-                <img class="d-flex mr-3 rounded-circle avatar-sm" src='{{asset("assets/images/users")}}/{{$post->groupsTeacher->teacher->image}}' alt="Generic placeholder image">
-                <div class="media-body">
-                    <h4 class="font-size-14 m-0">{{$post->groupsTeacher->teacher->name}}</h4>
-                    <small class="text-muted">{{$post->groupsTeacher->teacher->email}}</small>
+        <div class="card-body"> 
+            @if($post->publisher_type == 'admin')
+                <div class="d-flex justify-content-between">
+                    <div class="media mb-5">
+                        <img class="d-flex mr-3 rounded-circle avatar-sm" src='{{asset("assets/images/admins")}}/{{$post->groupsAdmin->image}}' alt="Generic placeholder image">
+                        <div class="media-body">
+                            <h4 class="font-size-14 m-0">{{$post->groupsAdmin->name}}</h4>
+                            <small class="text-muted">{{$post->groupsAdmin->email}}</small>
+                            <br>
+                            <small class="text-muted">
+                                @if($post->is_publisher == 1)
+                                منشور
+                                @elseif($post->is_publisher == 0)
+                                مخفي
+                                @endif
+                            </small>
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+
+                            <div class="btn-group" role="group">
+                                <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-align-justify"></i>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                    @if($post->is_publisher == 1)
+                                    <a class="btn btn-dark col-sm-12"  href="{{route("groups.postSare", ['id'=>$post->id])}}">عدم النشر</a>
+                                    @elseif($post->is_publisher == 0)
+                                    <a class="btn btn-dark col-sm-12"  href="{{route("groups.postSare", ['id'=>$post->id])}}"> النشر</a>
+                                    @endif
+                                    <div class="btn btn-dark col-sm-12"  onclick="modelShare('{{$post->id}}')" data-toggle="modal" data-target="#share{{$post->id}}">مشاركة في جروب </div>
+                                    
+                                    <a class="btn btn-dark col-sm-12"  href="{{route("groups.postDelete", ['id'=>$post->id])}}">حذف</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @elseif($post->publisher_type == 'teacher')
+            <div class="d-flex justify-content-between">
+                <div class="media mb-5">
+                    <img class="d-flex mr-3 rounded-circle avatar-sm" src='{{asset("assets/images/teachers")}}/{{$post->groupsTeacher->teacher->image}}' alt="Generic placeholder image">
+                    <div class="media-body">
+                        <h4 class="font-size-14 m-0">{{$post->groupsTeacher->teacher->name}}</h4>
+                        <small class="text-muted">{{$post->groupsTeacher->teacher->email}}</small>
+                        <br>
+                        <small class="text-muted">
+                            @if($post->is_publisher == 1)
+                            منشور
+                            @elseif($post->is_publisher == 0)
+                            مخفي
+                            @endif
+                        </small>
+                    </div>
+                </div>
+                <div class="">
+                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+
+                        <div class="btn-group" role="group">
+                            <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-align-justify"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                @if($post->is_publisher == 1)
+                                <a class="btn btn-dark col-sm-12"  href="{{route("groups.postSare", ['id'=>$post->id])}}">عدم النشر</a>
+                                @elseif($post->is_publisher == 0)
+                                <a class="btn btn-dark col-sm-12"  href="{{route("groups.postSare", ['id'=>$post->id])}}"> النشر</a>
+                                @endif
+                                <div class="btn btn-dark col-sm-12"  onclick="modelShare('{{$post->id}}')" data-toggle="modal" data-target="#share{{$post->id}}">مشاركة في جروب </div>
+                                <a class="btn btn-dark col-sm-12"  href="{{route("groups.postDelete", ['id'=>$post->id])}}">حذف</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+            @endif
         
             <p>{{$post->description}}</p>
             <hr/>
@@ -61,7 +130,6 @@
                     @endif
                 @endforeach
             </div>
-    
         </div>
     </div>
 @endforeach
@@ -148,6 +216,44 @@
             </div>
         `
     }
+
+    function modelShare(x){
+        document.getElementById('modelImagee').innerHTML =`
+            <div class="modal " id="share`+x+`" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">مشاركة المنشور</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{route('groups.shareToGroup')}}" method="post">
+                                @csrf
+                                <div class="form-group">
+                                    <input value="`+x+`" name="postId" type="hidden" >
+                                    <label class="control-label col-sm-2">المجموعات</label>
+                                    <div class="col-sm-10">
+                                        <select class="select2 form-control select2-multiple" multiple="multiple" name="groups_id[]" multiple data-placeholder="اختر الإضافات">
+                                            @foreach($groups as $group)
+                                                <option value="{{$group->id}}">{{$group->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">غلق</button>
+                                <button type="submint" class="btn btn-primary">مشاركة</button>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `
+    }
 </script>
 
 </div>
+

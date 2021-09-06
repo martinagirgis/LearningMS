@@ -5,14 +5,20 @@ namespace App\Http\Controllers\Admin;
 use App\User;
 use App\models\Media;
 use App\models\Groups;
+use App\models\MediaGroup;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\models\MediaGroup;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use PHPUnit\TextUI\XmlConfiguration\Group;
 
 class GroupsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:admin');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -27,7 +33,8 @@ class GroupsController extends Controller
     public function details($id)
     {
         $group = Groups::find($id);
-        return view('admin.groups.details.main', compact('group'));
+        $groups = Groups::get();
+        return view('admin.groups.details.main', compact('group', 'groups'));
     }
 
     public function exams($id){
@@ -159,9 +166,9 @@ class GroupsController extends Controller
         return $url;
     }
 
-    public function addImage(Request $request, $uid)
+    public function addImage(Request $request, $uid, $groupId)
     {
-        
+        // $id = 
         $group = MediaGroup::where('uid',$uid)->count();
 
         if($group==0)
@@ -169,8 +176,9 @@ class GroupsController extends Controller
             MediaGroup::create([
                 'uid'=> $uid,
                 'description'=> ' ',
-                'groups_teacher_id'=>1,
-                'group_id'=>1,
+                'groups_teacher_id'=> Auth::guard('admin')->user()->id,
+                'publisher_type' => 'admin',
+                'group_id'=> $groupId,
                 'is_publisher'=>1,
             ]);
         }
@@ -194,8 +202,6 @@ class GroupsController extends Controller
         $group->update([
                 'uid'=>$request->uid,
                 'description'=> $request->description,
-                'groups_teacher_id'=>1,
-                'group_id'=>1,
                 'is_publisher'=>1,
             ]);
         return redirect()->back()->with('success', 'The Group has added images successfully.');
@@ -212,7 +218,7 @@ class GroupsController extends Controller
         return $url;
     }
 
-    public function addVideo(Request $request, $uid)
+    public function addVideo(Request $request, $uid, $groupId)
     {
         
         $group = MediaGroup::where('uid',$uid)->count();
@@ -222,8 +228,9 @@ class GroupsController extends Controller
             MediaGroup::create([
                 'uid'=> $uid,
                 'description'=> ' ',
-                'groups_teacher_id'=>1,
-                'group_id'=>1,
+                'groups_teacher_id'=> Auth::guard('admin')->user()->id,
+                'publisher_type' => 'admin',
+                'group_id'=> $groupId,
                 'is_publisher'=>1,
             ]);
         }
@@ -247,8 +254,6 @@ class GroupsController extends Controller
         $group->update([
                 'uid'=> $request->uidvid,
                 'description'=> $request->description,
-                'groups_teacher_id'=>1,
-                'group_id'=>1,
                 'is_publisher'=>1,
             ]);
         return redirect()->back()->with('success', 'The Group has added videos successfully.');
@@ -264,7 +269,7 @@ class GroupsController extends Controller
         return $url;
     }
 
-    public function addFile(Request $request, $uid)
+    public function addFile(Request $request, $uid , $groupId)
     {
         
         $group = MediaGroup::where('uid',$uid)->count();
@@ -274,8 +279,9 @@ class GroupsController extends Controller
             MediaGroup::create([
                 'uid'=> $uid,
                 'description'=> ' ',
-                'groups_teacher_id'=>1,
-                'group_id'=>1,
+                'groups_teacher_id'=> Auth::guard('admin')->user()->id,
+                'publisher_type' => 'admin',
+                'group_id'=> $groupId,
                 'is_publisher'=>1,
             ]);
         }
@@ -299,8 +305,6 @@ class GroupsController extends Controller
         $group->update([
                 'uid'=> $request->uidfile,
                 'description'=> $request->description,
-                'groups_teacher_id'=>1,
-                'group_id'=>1,
                 'is_publisher'=>1,
             ]);
         return redirect()->back()->with('success', 'The Group has added files successfully.');
@@ -316,7 +320,7 @@ class GroupsController extends Controller
         return $url;
     }
 
-    public function addAudio(Request $request, $uid)
+    public function addAudio(Request $request, $uid, $groupId) 
     {
         $group = MediaGroup::where('uid',$uid)->count();
 
@@ -325,8 +329,9 @@ class GroupsController extends Controller
             MediaGroup::create([
                 'uid'=> $uid,
                 'description'=> ' ',
-                'groups_teacher_id'=>1,
-                'group_id'=>1,
+                'groups_teacher_id'=> Auth::guard('admin')->user()->id,
+                'publisher_type' => 'admin',
+                'group_id'=> $groupId,
                 'is_publisher'=>1,
             ]);
         }
@@ -350,10 +355,55 @@ class GroupsController extends Controller
         $group->update([
                 'uid'=> $request->uidaudio,
                 'description'=> $request->description,
-                'groups_teacher_id'=>1,
-                'group_id'=>1,
                 'is_publisher'=>1,
             ]);
         return redirect()->back()->with('success', 'تمت اضافة المنشور ملفات صوتية بنجاح');
+    }
+
+    public function postShare($id)
+    {
+        $post = MediaGroup::find($id);
+        if($post->is_publisher == 1)
+        {
+            $post->update([
+                'is_publisher'=>0,
+            ]);
+            return redirect()->back()->with('success', 'تم اخفاء المنشور بنجاح');
+        }
+        elseif($post->is_publisher == 0)
+        {
+            $post->update([
+                'is_publisher'=>1,
+            ]);
+            return redirect()->back()->with('success', 'تم نشر المنشور بنجاح');
+        }
+    }
+
+    public function postDelete($id)
+    {
+        $post = MediaGroup::find($id);
+        $media = Media::where('group_uid',$post->uid)->get();
+        foreach ($media as $med) {
+            $med->delete();
+        }
+        $post->delete();
+        return redirect()->route('groups.index')->with('success', 'تم حذف المنشور');
+    }
+
+    public function ShareToGroup(Request $request)
+    {
+        $post = MediaGroup::find($request->postId);
+        foreach ($request->groups_id as $mediaGroup) {
+            MediaGroup::create([
+                'uid'=> $post->uid,
+                'description'=> $post->description,
+                'groups_teacher_id'=> Auth::guard('admin')->user()->id,
+                'publisher_type' => 'admin',
+                'group_id'=> $mediaGroup,
+                'is_publisher'=>1,
+            ]);
+        }
+        
+        return redirect()->back()->with('success', 'تم مشاركة المنشور');
     }
 }
